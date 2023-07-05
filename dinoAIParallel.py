@@ -222,22 +222,21 @@ def first(x):
     return x[0]
 
 
-class KeySimplestClassifier(KeyClassifier):
+class KeyTreeClassifier(KeyClassifier):
     def __init__(self, state):
         self.state = state
 
     def keySelector(self, distance, obHeight, speed, obType, nextObDistance, nextObHeight,nextObType):
-        self.state = sorted(self.state, key=first)
-        for s, d in self.state:
-            if speed < s:
-                limDist = d
-                break
-        if distance <= limDist:
-            if isinstance(obType, Bird) and obHeight > 50:
-                return "K_DOWN"
-            else:
+        print(f"{speed} - {global_speed}")
+        print(f"{distance} - {global_distance}")
+
+        if distance <= global_distance:
+            if isinstance(obType, Bird) and obHeight < 83:
                 return "K_UP"
-        return "K_NO"
+            elif not isinstance(obType, Bird):
+                return "K_UP"
+            
+        return "K_DOWN"
 
     def updateState(self, state):
         self.state = state
@@ -278,7 +277,7 @@ def playGame(solutions):
 
     for solution in solutions:
         players.append(Dinosaur())
-        players_classifier.append(KeySimplestClassifier(solution))
+        players_classifier.append(KeyTreeClassifier(solution))
         solution_fitness.append(0)
         died.append(False)
 
@@ -464,13 +463,102 @@ def manyPlaysResultsTest(rounds,best_solution):
     return (results, npResults.mean() - npResults.std())
 
 
-def main():
+# bounds = [(v_min, v_max), (d_min, d_max)]
+import sys
 
+class PSO:
+
+    def __init__(self, state,num_particles, max_iterations, bounds, w, c1, c2):
+        self.num_particles = num_particles
+        self.max_iterations = max_iterations
+        self.bounds = bounds
+        self.w = w
+        self.c1 = c1
+        self.c2 = c2
+        
+        self.best_global_position = None
+        self.best_global_fitness = float('inf')
+        self.particles = []
+
+        self.state = state
+
+    def initialize_particles(self):
+        for _ in range(self.num_particles):
+            particle = Particle(self.bounds)
+            self.particles.append(particle)
+            if particle.get_best_fitness() < self.best_global_fitness:
+                self.best_global_position = particle.get_best_position()
+                self.best_global_fitness = particle.get_best_fitness()
+
+    def run(self):
+        global global_speed
+        global global_distance
+
+        self.initialize_particles()
+        
+        iteration = 0
+        while iteration < self.max_iterations:
+            for particle in self.particles:
+                particle.update_velocity(self.w, self.c1, self.c2, self.best_global_position)
+                particle.update_position()
+
+                global_speed = particle.position[0]
+                global_distance = particle.position[1]
+                neighborhood = generate_neighborhood(self.state)
+                # fitness = self.objective_function(particle.position[0], particle.position[1])
+                fitness = playGame(neighborhood)
+
+                if fitness[0] < particle.best_fitness:
+                    particle.best_position = particle.position.copy()
+                    particle.best_fitness = fitness[0]
+
+                if fitness[0] < self.best_global_fitness:
+                    self.best_global_position = particle.best_position
+                    self.best_global_fitness = fitness[0]
+            iteration += 1
+
+        return self.best_global_position, self.best_global_fitness
+
+
+class Particle:
+    def __init__(self, bounds):
+        self.position = [random.uniform(bounds[0][0], bounds[0][1]),
+                          random.uniform(bounds[1][0], bounds[1][1])]
+        self.velocity = [0.0, 0.0]
+        self.best_position = self.position.copy()
+        self.best_fitness = sys.float_info.max
+    
+    def update_velocity(self, w, c1, c2, global_best_position):
+        self.velocity[0] = w * self.velocity[0] + c1 * random.uniform(0, 1) * (self.best_position[0] - self.position[0]) + c2 * random.uniform(0, 1) * (global_best_position[0] - self.position[0])
+        self.velocity[1] = w * self.velocity[1] + c1 * random.uniform(0, 1) * (self.best_position[1] - self.position[1]) + c2 * random.uniform(0, 1) * (global_best_position[1] - self.position[1])
+    
+    def update_position(self):
+        self.position[0] += self.velocity[0]
+        self.position[1] += self.velocity[1]
+
+    def get_best_position(self):
+        return self.best_position
+    def get_best_fitness(self):
+        return self.best_fitness
+
+def main():
+    global global_speed
+    global global_distance
+    
     initial_state = [(15, 250), (18, 350), (20, 450), (1000, 550)]
-    best_state, best_value = gradient_ascent(initial_state, 5000)
-    res, value = manyPlaysResultsTest(30, best_state)
-    npRes = np.asarray(res)
-    print(res, npRes.mean(), npRes.std(), value)
+    pso_tree = PSO(initial_state, 5, 10, [(10, 1000), (10, 1000)], 0.5, 1.2, 1.2)
+    best_position, best_fitness = pso_tree.run()
+
+
+    # manyPlaysResultsTest(30, best_position)
+
+    print("Melhor posição global:", best_position)
+    print("Melhor valor de fitness:", best_fitness)
+
+    # best_state, best_value = gradient_ascent(initial_state, 5000)
+    # res, value = manyPlaysResultsTest(30, best_state)
+    # npRes = np.asarray(res)
+    # print(res, npRes.mean(), npRes.std(), value)
 
 
 main()
