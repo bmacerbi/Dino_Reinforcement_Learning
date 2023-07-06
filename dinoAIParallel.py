@@ -462,7 +462,6 @@ def manyPlaysResultsTest(rounds,best_solution):
     return (results, npResults.mean() - npResults.std())
 
 
-# bounds = [(v_min, v_max), (d_min, d_max)]
 import sys
 
 class PSO:
@@ -486,14 +485,8 @@ class PSO:
             if particle.get_best_fitness() < self.best_global_fitness:
                 self.best_global_position = particle.get_best_position()
                 self.best_global_fitness = particle.get_best_fitness()
-
-    def run_many(self):
-        self.initialize_particles()
-        results = manyPlaysResultsTrain(self.max_iterations, self.particles)
-        # print(results)
-        
-
-    def run_one(self):
+    
+    def run_train(self):
         global down_metric
         global up_metric
 
@@ -504,7 +497,6 @@ class PSO:
 
         while iteration < self.max_iterations:
             fitness_list = []
-            print(f"Interação: {iteration}/Mean:", end=" ")
             for particle in self.particles:
                 particle.update_velocity(self.w, self.c1, self.c2, self.best_global_position)
                 particle.update_position()
@@ -522,14 +514,26 @@ class PSO:
                     self.best_global_position = particle.position.copy()
                     self.best_global_fitness = fitness[0]
 
-                # print(f"Global: {self.best_global_position[1]} / {self.best_global_position[0]}")
-                # print("---------------------------------------------")
-
-            print(mean(fitness_list))
+            print(f"Interação: {iteration}/Mean: {mean(fitness_list)}")
             fitness_mean.append(mean(fitness_list))
             iteration += 1
 
         return self.best_global_position, self.best_global_fitness, fitness_mean
+
+    def run_test(self, best_position, rounds):
+        global down_metric
+        global up_metric    
+        test_results = []
+
+        down_metric = best_position[0]
+        up_metric = best_position[1]
+
+        for i in range(rounds):
+            result = playGame(best_position)
+            test_results.append(result[0])
+
+        return test_results
+
 
 class Particle:
     def __init__(self, bounds):
@@ -546,7 +550,6 @@ class Particle:
     def update_position(self):
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
-        # print(f"{self.position[1]} - {self.position[0]}")
 
     def get_best_position(self):
         return self.best_position
@@ -557,16 +560,16 @@ def main():
     global down_metric
     global up_metric
     
-    # for i in range(0,3):
-        # print(f"RODADA {i}:\n")
-    pso_tree = PSO(2, 2, [(5, 10), (20, 30)], 0.5, 1.2, 1.2)
-    # pso_tree.run_many()
-    best_position, best_fitness, mean = pso_tree.run_one()
+    pso_tree = PSO(5, 30, [(5, 10), (18, 30)], 0.5, 1.2, 1.2)
+    # best_position, best_fitness, mean_list = pso_tree.run_train()
 
     # print("Melhor posição global:", best_position)
     # print("Melhor valor de fitness:", best_fitness)
-    # print("Media de fitness:", mean)
+    # print("Media de fitness:", mean_list)
 
-    # playGame(best_position)
+    best_position = [6.559719774311279, 23.583685863013507]
+    print(f"Resultados obtidos no teste: {pso_tree.run_test(best_position, 30)}")
+
+    
 
 main()

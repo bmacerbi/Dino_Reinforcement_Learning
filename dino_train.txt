@@ -1,0 +1,33 @@
+Interação: 0/Mean: 1476.25
+Interação: 1/Mean: 1701.6
+Interação: 2/Mean: 2286.4
+Interação: 3/Mean: 2108.3
+Interação: 4/Mean: 1953.85
+Interação: 5/Mean: 2646.7
+Interação: 6/Mean: 3205.35
+Interação: 7/Mean: 3258.85
+Interação: 8/Mean: 3404.3
+Interação: 9/Mean: 3503.3
+Interação: 10/Mean: 3030.5
+Interação: 11/Mean: 3497.8
+Interação: 12/Mean: 3186.95
+Interação: 13/Mean: 3201.35
+Interação: 14/Mean: 3327.35
+Interação: 15/Mean: 3217.85
+Interação: 16/Mean: 3267.05
+Interação: 17/Mean: 3079.65
+Interação: 18/Mean: 3293.9
+Interação: 19/Mean: 3201.7
+Interação: 20/Mean: 3279.2
+Interação: 21/Mean: 3361.0
+Interação: 22/Mean: 3142.0
+Interação: 23/Mean: 3362.95
+Interação: 24/Mean: 2511.5
+Interação: 25/Mean: 3277.45
+Interação: 26/Mean: 3254.5
+Interação: 27/Mean: 3401.5
+Interação: 28/Mean: 3005.2
+Interação: 29/Mean: 3291.65
+Melhor posição global: [6.559719774311279, 23.583685863013507]
+Melhor valor de fitness: 3850.75
+Media de fitness: [1476.25, 1701.6, 2286.4, 2108.3, 1953.85, 2646.7, 3205.35, 3258.85, 3404.3, 3503.3, 3030.5, 3497.8, 3186.95, 3201.35, 3327.35, 3217.85, 3267.05, 3079.65, 3293.9, 3201.7, 3279.2, 3361.0, 3142.0, 3362.95, 2511.5, 3277.45, 3254.5, 3401.5, 3005.2, 3291.65]
