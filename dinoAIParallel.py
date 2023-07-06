@@ -531,7 +531,7 @@ class PSO:
         for i in range(rounds):
             result = playGame(best_position)
             test_results.append(result[0])
-            print(result[0])
+            print(f"Pontuação: {result[0]}")
 
         return test_results
 
