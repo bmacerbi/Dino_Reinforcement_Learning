@@ -1,7 +1,7 @@
 [3456.5, 3455.5, 2914.5, 3016.25, 3118.0, 2802.25, 3021.75, 3223.5, 3264.0, 3078.25, 3261.75, 3794.5, 3198.75, 3547.25, 3159.75, 3355.5, 3396.25, 3132.75, 3609.25, 3140.25, 2756.25, 3327.75, 3682.5, 3199.25, 3616.5, 2827.5, 3727.0, 3084.75, 3232.75, 3528.5]
 
-Melhor valor de fitness:
-Pior valor de fitness:
-Media de fitness:
-Desvio padrão de fitness:
+Melhor valor de fitness: 3794.5
+Pior valor de fitness: 2756.25
+Media de fitness: 3264.3083333333334
+Desvio padrão de fitness: 271.688498739314
 Posição global escolhida: [6.559719774311279, 23.583685863013507]

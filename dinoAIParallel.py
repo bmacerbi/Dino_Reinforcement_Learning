@@ -9,7 +9,7 @@ pygame.init()
 
 # Valid values: HUMAN_MODE or AI_MODE
 GAME_MODE = "AI_MODE"
-RENDER_GAME = True
+RENDER_GAME = False
 
 # Global Constants
 SCREEN_HEIGHT = 600
@@ -514,7 +514,7 @@ class PSO:
                     self.best_global_position = particle.position.copy()
                     self.best_global_fitness = fitness[0]
 
-            print(f"Interação: {iteration}/Mean: {mean(fitness_list)}")
+            print(f"Iteração: {iteration} / Mean: {mean(fitness_list)}")
             fitness_mean.append(mean(fitness_list))
             iteration += 1
 
@@ -531,6 +531,7 @@ class PSO:
         for i in range(rounds):
             result = playGame(best_position)
             test_results.append(result[0])
+            print(result[0])
 
         return test_results
 
@@ -560,14 +561,14 @@ def main():
     global down_metric
     global up_metric
     
-    pso_tree = PSO(5, 30, [(5, 10), (18, 30)], 0.5, 1.2, 1.2)
-    # best_position, best_fitness, mean_list = pso_tree.run_train()
+    pso_tree = PSO(20, 30, [(5, 10), (20, 30)], 0.5, 1.2, 1.2)
+    best_position, best_fitness, mean_list = pso_tree.run_train()
 
-    # print("Melhor posição global:", best_position)
-    # print("Melhor valor de fitness:", best_fitness)
-    # print("Media de fitness:", mean_list)
+    print("Melhor posição global:", best_position)
+    print("Melhor valor de fitness:", best_fitness)
+    print("Media de fitness:", mean_list)
+    print()
 
-    best_position = [6.559719774311279, 23.583685863013507]
     print(f"Resultados obtidos no teste: {pso_tree.run_test(best_position, 30)}")
 
     
