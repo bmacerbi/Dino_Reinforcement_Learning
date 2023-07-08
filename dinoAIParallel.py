@@ -514,7 +514,7 @@ class PSO:
                     self.best_global_position = particle.position.copy()
                     self.best_global_fitness = fitness[0]
 
-            print(f"Iteração: {iteration} / Mean: {mean(fitness_list)}")
+            print(f"Iteração: {iteration} / Média: {mean(fitness_list)}")
             fitness_mean.append(mean(fitness_list))
             iteration += 1
 
@@ -561,15 +561,16 @@ def main():
     global down_metric
     global up_metric
     
-    pso_tree = PSO(20, 30, [(5, 10), (20, 30)], 0.5, 1.2, 1.2)
+    pso_tree = PSO(num_particles=20, max_iterations=30, bounds=[(5, 10), (20, 30)], w=0.5, c1=1.2, c2=1.2)
     best_position, best_fitness, mean_list = pso_tree.run_train()
 
     print("Melhor posição global:", best_position)
-    print("Melhor valor de fitness:", best_fitness)
-    print("Media de fitness:", mean_list)
+    print("Melhor resultado:", best_fitness)
+    print("Media de resultados:", mean_list)
     print()
 
-    print(f"Resultados obtidos no teste: {pso_tree.run_test(best_position, 30)}")
+    print("Inicializando Teste com melhor ajuste:")
+    print(f"Resultados obtidos no teste: {pso_tree.run_test(best_position, rounds=30)}")
 
     
 
