@@ -465,8 +465,7 @@ def manyPlaysResultsTest(rounds,best_solution):
 import sys
 
 class PSO:
-
-    def __init__(self,num_particles, max_iterations, bounds, w, c1, c2):
+    def __init__(self, num_particles, max_iterations, bounds, w, c1, c2):
         self.num_particles = num_particles
         self.max_iterations = max_iterations
         self.bounds = bounds
@@ -479,9 +478,11 @@ class PSO:
         self.particles = []
 
     def initialize_particles(self):
+        # Inicializa as partículas
         for _ in range(self.num_particles):
             particle = Particle(self.bounds)
             self.particles.append(particle)
+            # Verifica se a nova partícula possui o melhor ajuste global
             if particle.get_best_fitness() < self.best_global_fitness:
                 self.best_global_position = particle.get_best_position()
                 self.best_global_fitness = particle.get_best_fitness()
@@ -498,22 +499,28 @@ class PSO:
         while iteration < self.max_iterations:
             fitness_list = []
             for particle in self.particles:
+                # Atualiza a velocidade e a posição da partícula
                 particle.update_velocity(self.w, self.c1, self.c2, self.best_global_position)
                 particle.update_position()
 
+                #Atualiza métricas globais de pulo e agaxamento
                 down_metric = particle.position[0]
                 up_metric = particle.position[1]
+                # Obtém a pontuação da partícula
                 fitness = playGame(self.particles)
                 fitness_list.append(fitness[0])
 
+                # Atualiza a melhor posição e ajuste da partícula
                 if fitness[0] > particle.best_fitness:
                     particle.best_position = particle.position.copy()
                     particle.best_fitness = fitness[0]
 
+                # Atualiza a melhor posição e ajuste global
                 if fitness[0] > self.best_global_fitness:
                     self.best_global_position = particle.position.copy()
                     self.best_global_fitness = fitness[0]
 
+            # Imprime a iteração e a média de ajuste das partículas
             print(f"Iteração: {iteration} / Média: {mean(fitness_list)}")
             fitness_mean.append(mean(fitness_list))
             iteration += 1
@@ -525,12 +532,15 @@ class PSO:
         global up_metric    
         test_results = []
 
+        # Define a posição inicial para o teste
         down_metric = best_position[0]
         up_metric = best_position[1]
 
         for i in range(rounds):
+            # Executa o jogo com a melhor posição encontrada
             result = playGame(best_position)
             test_results.append(result[0])
+            # Imprime a pontuação obtida
             print(f"Pontuação: {result[0]}")
 
         return test_results
@@ -538,6 +548,7 @@ class PSO:
 
 class Particle:
     def __init__(self, bounds):
+        # Inicializa a partícula com uma posição e velocidade aleatórias dentro dos limites definidos
         self.position = [random.uniform(bounds[0][0], bounds[0][1]),
                           random.uniform(bounds[1][0], bounds[1][1])]
         self.velocity = [0.0, 0.0]
@@ -545,15 +556,18 @@ class Particle:
         self.best_fitness = -sys.float_info.max
     
     def update_velocity(self, w, c1, c2, global_best_position):
+        # Atualiza a velocidade da partícula usando as fórmulas do PSO
         self.velocity[0] = w * self.velocity[0] + c1 * random.uniform(0, 1) * (self.best_position[0] - self.position[0]) + c2 * random.uniform(0, 1) * (global_best_position[0] - self.position[0])
         self.velocity[1] = w * self.velocity[1] + c1 * random.uniform(0, 1) * (self.best_position[1] - self.position[1]) + c2 * random.uniform(0, 1) * (global_best_position[1] - self.position[1])
 
     def update_position(self):
+        # Atualiza a posição da partícula usando a sua velocidade atual
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
 
     def get_best_position(self):
         return self.best_position
+    
     def get_best_fitness(self):
         return self.best_fitness
 
