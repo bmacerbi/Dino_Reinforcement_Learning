@@ -510,17 +510,17 @@ class PSO:
                 fitness = playGame(self.particles)
                 fitness_list.append(fitness[0])
 
-                # Atualiza a melhor posição e ajuste da partícula
+                # Atualiza a melhor posição e pontuação da partícula
                 if fitness[0] > particle.best_fitness:
                     particle.best_position = particle.position.copy()
                     particle.best_fitness = fitness[0]
 
-                # Atualiza a melhor posição e ajuste global
+                # Atualiza a melhor posição e pontuação global
                 if fitness[0] > self.best_global_fitness:
                     self.best_global_position = particle.position.copy()
                     self.best_global_fitness = fitness[0]
 
-            # Imprime a iteração e a média de ajuste das partículas
+            # Imprime a iteração e a média de pontuação das partículas
             print(f"Iteração: {iteration} / Média: {mean(fitness_list)}")
             fitness_mean.append(mean(fitness_list))
             iteration += 1
@@ -532,7 +532,7 @@ class PSO:
         global up_metric    
         test_results = []
 
-        # Define a posição inicial para o teste
+        #Atualiza métricas globais de pulo e agaxamento com melhor ajuste
         down_metric = best_position[0]
         up_metric = best_position[1]
 
@@ -576,13 +576,15 @@ def main():
     global up_metric
     
     pso_tree = PSO(num_particles=20, max_iterations=30, bounds=[(5, 10), (20, 30)], w=0.5, c1=1.2, c2=1.2)
-    best_position, best_fitness, mean_list = pso_tree.run_train()
+    # best_position, best_fitness, mean_list = pso_tree.run_train()
 
-    print("Melhor posição global:", best_position)
-    print("Melhor resultado:", best_fitness)
-    print("Media de resultados:", mean_list)
-    print()
+    # print("Melhor posição global:", best_position)
+    # print("Melhor resultado:", best_fitness)
+    # print("Media de resultados:", mean_list)
+    # print()
 
+    # Um dos melhores ajustes encontrados durante treino
+    best_position = [6.568917897969113, 24.093591675980395]
     print("Inicializando Teste com melhor ajuste:")
     print(f"Resultados obtidos no teste: {pso_tree.run_test(best_position, rounds=30)}")
 
