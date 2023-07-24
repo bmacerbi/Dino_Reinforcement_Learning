@@ -7,7 +7,7 @@ sudo apt-get install python3
 pip install pygame
 
 3. Executar o jogo
-python3 dinoAI.py
+python3 dinoAIParallel.py
 
 Como tirar a interface gráfica:
 
